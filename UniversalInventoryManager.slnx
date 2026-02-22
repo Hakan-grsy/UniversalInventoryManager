@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="UniversalInventoryManager.Console/UniversalInventoryManager.Console.csproj" />
+  <Project Path="UniversalInventoryManager.UI/UniversalInventoryManager.UI.csproj" />
+</Solution>
