@@ -134,6 +134,7 @@
                           BorderThickness="0"
                           RowBackground="White"
                           AlternatingRowBackground="#FAFAFA">
+                    
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
@@ -146,6 +147,15 @@
 
                 </DataGrid>
             </Border>
+            <Button x:Name="BtnExport" 
+                    Content="Export to Excel" 
+                    Click="ExportToExcel_Click" 
+                    Width="120" 
+                    Height="30" 
+                    Margin="5" 
+                    Background="#217346" 
+                    Foreground="White" 
+                    FontWeight="Bold"/>
 
             <Button x:Name="BtnDeleteSelected" 
                     Grid.Row="2" 

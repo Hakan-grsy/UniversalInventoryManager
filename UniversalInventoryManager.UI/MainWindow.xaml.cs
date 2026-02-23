@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using Microsoft.Win32;
+using System;
 using System.Windows;
 using UniversalInventoryManager.Console.Data;
 using UniversalInventoryManager.Console.Models;
@@ -144,6 +146,56 @@ namespace UniversalInventoryManager.UI
             if (TxtSize != null) TxtSize.Clear();
             if (ChkBattery != null) ChkBattery.IsChecked = false;
             if (RbTech != null) RbTech.IsChecked = true; // Reset back to Tech category by default
+        }
+        private void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                FileName = $"Inventory_Report_{DateTime.Now:yyyyMMdd}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Inventory");
+
+                        // Tablo başlıkları
+                        worksheet.Cell(1, 1).Value = "Product Name";
+                        worksheet.Cell(1, 2).Value = "Category";
+                        worksheet.Cell(1, 3).Value = "Price";
+                        worksheet.Cell(1, 4).Value = "Stock";
+
+                        // Senin DataGrid ismin 'DgProducts' olduğu için burayı ona göre bağladık
+                        var items = DgProducts.ItemsSource;
+
+                        if (items != null)
+                        {
+                            int row = 2;
+                            foreach (var item in items)
+                            {
+                                dynamic d = item;
+                                worksheet.Cell(row, 1).Value = d.Name;
+                                worksheet.Cell(row, 2).Value = d.Category;
+                                worksheet.Cell(row, 3).Value = d.Price;
+                                worksheet.Cell(row, 4).Value = d.StockQuantity;
+                                row++;
+                            }
+                        }
+
+                        worksheet.Columns().AdjustToContents();
+                        workbook.SaveAs(saveFileDialog.FileName);
+                        MessageBox.Show("Export successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }
